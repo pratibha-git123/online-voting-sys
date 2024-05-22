@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+      <link rel="stylesheet" href="style.css">
+    <title> voting system </title>
+  </head>
+  <body>
+    <div class="container">
+        <h1>Online Voting System</h1>
+        <button class="refresh-button" onclick="refreshPage()">Refresh</button>
+        <div class="form"><br>
+            <label for="name">Enter Your Name:</label><br>
+            <input type="text" id="name" placeholder="Enter your name">
+        </div>
+        <div class="candidates">
+            <h4 id="cp">Nominated Parties:</h4>
+            <div class="candidate">
+                <input type="radio" id="candidate1" name="candidate" value="BJP">
+                <label for="candidate1">BJP</label>
+            </div>
+            <div class="candidate">
+                <input type="radio" id="candidate2" name="candidate" value="Congress">
+                <label for="candidate2">Congress</label>
+            </div>
+            <div class="candidate">
+                <input type="radio" id="candidate3" name="candidate" value="Other">
+                <label for="candidate3">Other</label>
+            </div>
+        </div>
+        <button class="btn" onclick="vote()">Vote</button> <br>
+        <button class="btn" onclick="calculateVotes()">Calculate Votes</button>
+        <div class="message" id="message"></div>
+        <div class="result" id="result"></div>
+        </div>
+
+
+        <script>
+            let votes = {};  // Object to store votes with voter's name
+            function vote() {
+                const name = document.getElementById('name').value;
+                const selectedCandidate = document.querySelector('input[name="candidate"]:checked');
+                if (!name) {
+                    document.getElementById('message').innerHTML = "Please enter your name.";
+                } else if (!selectedCandidate) {
+                    document.getElementById('message').innerHTML = "Please select a candidate.";
+                } else {
+                    const candidateName = selectedCandidate.value;
+                    votes[name] = candidateName;
+                    document.getElementById('message').innerHTML = `Thank you, ${name}, for voting!`;
+                    document.getElementById('message').style.color = "white";
+                    document.getElementById('result').innerHTML = "Voting Result:<br>";
+                    Object.keys(votes).forEach(voter => {
+                        document.getElementById('result').innerHTML += `${voter}: Voted for ${votes[voter]}<br>`;
+                    });
+            
+                    // Reset the form for the next voter
+                    document.getElementById('name').value = '';
+                    document.querySelector('input[name="candidate"]:checked').checked = false;
+                }
+            }
+            
+            // Function for claculate vote
+            function calculateVotes() {
+                const voteCount = { "BJP": 0, "Congress": 0, "Other": 0 };
+                Object.values(votes).forEach(candidate => {
+                    voteCount[candidate]++;
+                });
+                document.getElementById('result').innerHTML = "Voting Result:<br>";
+                Object.keys(voteCount).forEach(candidate => {
+                    document.getElementById('result').innerHTML += `${candidate}: ${voteCount[candidate]} votes<br>`;
+                });
+            }
+            
+            //Function for reload page
+            function refreshPage() {
+                location.reload();
+            }
+            </script>
+  </body>
+</html>
